@@ -1,0 +1,26 @@
+import os
+import re
+from pypdf import PdfWriter
+
+pasta = "hotmart"
+
+def ordenar_naturalmente(nome):
+    return [int(t) if t.isdigit() else t.lower() for t in re.split(r'(\d+)', nome)]
+
+arquivos = sorted(
+    [f for f in os.listdir(pasta) if f.endswith(".pdf") and not f.startswith(".")],
+    key=ordenar_naturalmente
+)
+
+writer = PdfWriter()
+
+for arquivo in arquivos:
+    caminho = os.path.join(pasta, arquivo)
+    with open(caminho, "rb") as f:
+        writer.append(f)
+    print(f"Adicionado: {arquivo}")
+
+with open("hotmart_final.pdf", "wb") as out_file:
+    writer.write(out_file)
+
+print("PDF final criado como 'hotmart_final.pdf'")
